@@ -1,4 +1,5 @@
 from numpy import exp, array, random, dot
+import numpy as np
 from  matplotlib import pyplot as plt
 class NeuralNetwork():
     def __init__(self):
@@ -26,7 +27,7 @@ class NeuralNetwork():
     # We train the neural network through a process of trial and error.
     # Adjusting the synaptic weights each time.
     def train(self, training_set_inputs, training_set_outputs, number_of_training_iterations):
-        for iteration in xrange(number_of_training_iterations):
+        for iteration in range(number_of_training_iterations):
             # Pass the training set through our neural network (a single neuron).
             output = self.think(training_set_inputs)
 
@@ -40,6 +41,9 @@ class NeuralNetwork():
             adjustment = dot(training_set_inputs.T, error * self.__sigmoid_derivative(output))
 
             # Adjust the weights.
+            #xx = np.linspace(-5,5)
+            #yy = slope*xx
+            #plt.plot(xx,yy,'k-')
             self.synaptic_weights += adjustment
 
     # The neural network thinks.
@@ -51,30 +55,38 @@ class NeuralNetwork():
 if __name__ == "__main__":
 
     #Intialise a single neuron neural network.
-    neural_network = NeuralNetwork()
+    nn = NeuralNetwork()
 
     print ("Random starting synaptic weights: ")
-    print (neural_network.synaptic_weights)
+    print (nn.synaptic_weights)
 
     # The training set. We have 4 examples, each consisting of 3 input values
     # and 1 output value.
     training_set_inputs = array([[-1, -1], [-1, 1], [1, -1], [1, 11]])
     training_set_outputs = array([[-1, 1, 1, 1]]).T
-    plt.plot(training_set_inputs, 'ro')
-    plt.axis('equal')
-    plt.show()
+   
+    
+
     # Train the neural network using a training set.
     # Do it 10,000 times and make small adjustments each time.
-    neural_network.train(training_set_inputs, training_set_outputs, 100000)
+    nn.train(training_set_inputs, training_set_outputs, 100000)
 
     print ("New synaptic weights after training: ")
-    print (neural_network.synaptic_weights)
+    print (nn.synaptic_weights)
+    slope = nn.synaptic_weights[0,0] / nn.synaptic_weights[1,0]
+    print(slope)
+    xx = np.linspace(-5,5,100)
+    yy = (-1*slope*xx) - 0.5
+    plt.plot(xx,yy,'-r')
+    plt.grid()
+    plt.show()
 
     # Test the neural network with a new situation.
-    print ("Considering new situation [1, 1] -> ?: ")
-    x = neural_network.think(array([-0.5, -0.5]))
-    print (x)
+    x1 =int( input("enter x coordinate"))
+    x2 =int( input("enter y coordinate"))
+    x = nn.think(array([x1, x2]))
     if x >= 0.5:
         print (1)
     else:
         print (-1)
+        
